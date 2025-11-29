@@ -1,84 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <!-- 关键：强制全屏，禁止缩放 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Rift Castle MVP</title>
+    <title>裂隙城战 Rift Castle - 调试版</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <style>
-      /* 全局样式：黑色背景，无滚动条 */
-      html, body {
+      html,
+      body {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
-        background-color: #000000;
+        background: #000; /* 黑色背景 */
         overflow: hidden;
-        touch-action: none; /* 禁止默认触摸行为 */
-        font-family: sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
       }
 
-      /* 游戏容器：居中显示 */
-      #app {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      /* 游戏容器，占满全屏 */
+      #game-container {
+        position: fixed;
+        inset: 0;
       }
 
-      /* 错误日志层：默认隐藏，有报错时显示 */
-      #error-log {
-        display: none; /* 默认隐藏 */
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.85); /* 半透明黑色背景 */
-        color: #ff4444; /* 红色文字 */
-        padding: 20px;
-        box-sizing: border-box;
+      /* 左上角调试信息 */
+      #debug-log {
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        max-width: 90vw;
+        max-height: 90vh;
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+        padding: 8px 10px;
+        font-size: 12px;
+        line-height: 1.4;
+        font-family: monospace;
+        white-space: pre-wrap;
         z-index: 9999;
         overflow-y: auto;
-        pointer-events: none; /* 允许点击穿透，但显示在最上层 */
-        font-family: monospace;
-        font-size: 14px;
-        white-space: pre-wrap; /* 保留换行 */
+      }
+
+      /* 初始提示文字，说明 HTML 是否生效 */
+      #initial-text {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff;
+        font-size: 16px;
+        text-align: center;
+        z-index: 1;
       }
     </style>
   </head>
   <body>
-    <!-- 1. 错误显示区域 (黑匣子) -->
-    <div id="error-log"></div>
+    <!-- 初始提示：如果看到这段话，说明 index.html 已经生效 -->
+    <div id="initial-text">
+      如果你能看到这段文字，说明 index.html 已经生效。<br />
+      稍等几秒，看左上角是否出现调试日志。
+    </div>
 
-    <!-- 2. 游戏挂载点 -->
-    <div id="app"></div>
+    <!-- 游戏容器（Phaser 会挂在这里） -->
+    <div id="game-container"></div>
 
-    <!-- 3. 错误捕获脚本 (必须放在最前面) -->
+    <!-- 调试日志 -->
+    <div id="debug-log">[LOG] 页面 HTML 已加载\n</div>
+
+    <!-- 错误捕获 & 启动脚本 -->
     <script>
-      // 捕获常规 JS 错误
+      const logEl = document.getElementById('debug-log');
+      function log(msg) {
+        logEl.textContent += '\n' + msg;
+      }
+
+      log('[LOG] inline script 执行开始');
+
+      // 捕获同步错误
       window.onerror = function (message, source, lineno, colno, error) {
-        var log = document.getElementById('error-log');
-        log.style.display = 'block';
-        var time = new Date().toLocaleTimeString();
-        // 如果是 ResizeObserver 错误，通常可以忽略，不显示
-        if (message && message.indexOf && message.indexOf('ResizeObserver') !== -1) return;
-        
-        log.innerText += '❌ [' + time + '] ERROR: ' + message + '\nAt: ' + source + ':' + lineno + '\n\n';
+        log(
+          '❌ window.onerror: ' +
+            message +
+            '\n源文件: ' +
+            source +
+            ':' +
+            lineno +
+            ':' +
+            colno
+        );
         return false;
       };
 
-      // 捕获 Promise 错误 (如 import 失败)
+      // 捕获 Promise / 模块加载 错误
       window.addEventListener('unhandledrejection', function (event) {
-        var log = document.getElementById('error-log');
-        log.style.display = 'block';
-        log.innerText += '⚠️ [Async Error]: ' + event.reason + '\n\n';
+        log('⚠️ unhandledrejection: ' + event.reason);
       });
+
+      log('[LOG] 已挂载 window.onerror 与 unhandledrejection 监听');
     </script>
 
-    <!-- 4. 游戏主入口 -->
-    <script type="module" src="/src/index.ts"></script>
+    <!-- 关键：游戏入口脚本 -->
+    <script type="module" src="/src/index.ts" onload="log('[LOG] /src/index.ts 加载完成')" onerror="log('❌ 加载 /src/index.ts 失败')"></script>
   </body>
 </html>
