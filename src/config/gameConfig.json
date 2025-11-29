@@ -1,0 +1,17 @@
+{
+  "castleHp": 1000,
+  "startingGold": 100,
+  "baseGoldPerSecond": 5,
+  "killGoldReward": 3,
+  "laneY": 270,
+  "playerCastleX": 120,
+  "aiCastleX": 840,
+  "skillInspire": {
+    "id": "inspire",
+    "name": "全线鼓舞",
+    "cooldown": 60,
+    "duration": 5,
+    "attackMultiplier": 1.2,
+    "moveSpeedMultiplier": 1.2
+  }
+}
