@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <title>裂隙城战 Rift Castle - MVP</title>
+
+    <!-- 移动端适配 -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+
     <style>
       html,
       body {
@@ -27,8 +30,13 @@
       }
     </style>
   </head>
+
   <body>
     <div id="game-container"></div>
+    <noscript>需要启用 JavaScript 才能运行游戏。</noscript>
+
+    <!-- 关键：入口脚本，必须有这行 -->
     <script type="module" src="/src/index.ts"></script>
+    <!-- 如果用相对路径想测试，也可以改成： ./src/index.ts -->
   </body>
 </html>
