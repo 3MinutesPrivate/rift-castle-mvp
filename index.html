@@ -1,42 +1,84 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <title>裂隙城战 Rift Castle - MVP</title>
-
-    <!-- 移动端适配 -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- 关键：强制全屏，禁止缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Rift Castle MVP</title>
     <style>
-      html,
-      body {
+      /* 全局样式：黑色背景，无滚动条 */
+      html, body {
         margin: 0;
         padding: 0;
-        background: #111;
+        width: 100%;
         height: 100%;
+        background-color: #000000;
         overflow: hidden;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-          'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+        touch-action: none; /* 禁止默认触摸行为 */
+        font-family: sans-serif;
       }
 
-      #game-container {
-        width: 100vw;
-        height: 100vh;
+      /* 游戏容器：居中显示 */
+      #app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* 错误日志层：默认隐藏，有报错时显示 */
+      #error-log {
+        display: none; /* 默认隐藏 */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85); /* 半透明黑色背景 */
+        color: #ff4444; /* 红色文字 */
+        padding: 20px;
+        box-sizing: border-box;
+        z-index: 9999;
+        overflow-y: auto;
+        pointer-events: none; /* 允许点击穿透，但显示在最上层 */
+        font-family: monospace;
+        font-size: 14px;
+        white-space: pre-wrap; /* 保留换行 */
       }
     </style>
   </head>
-
   <body>
-    <div id="game-container"></div>
-    <noscript>需要启用 JavaScript 才能运行游戏。</noscript>
+    <!-- 1. 错误显示区域 (黑匣子) -->
+    <div id="error-log"></div>
 
-    <!-- 关键：入口脚本，必须有这行 -->
+    <!-- 2. 游戏挂载点 -->
+    <div id="app"></div>
+
+    <!-- 3. 错误捕获脚本 (必须放在最前面) -->
+    <script>
+      // 捕获常规 JS 错误
+      window.onerror = function (message, source, lineno, colno, error) {
+        var log = document.getElementById('error-log');
+        log.style.display = 'block';
+        var time = new Date().toLocaleTimeString();
+        // 如果是 ResizeObserver 错误，通常可以忽略，不显示
+        if (message && message.indexOf && message.indexOf('ResizeObserver') !== -1) return;
+        
+        log.innerText += '❌ [' + time + '] ERROR: ' + message + '\nAt: ' + source + ':' + lineno + '\n\n';
+        return false;
+      };
+
+      // 捕获 Promise 错误 (如 import 失败)
+      window.addEventListener('unhandledrejection', function (event) {
+        var log = document.getElementById('error-log');
+        log.style.display = 'block';
+        log.innerText += '⚠️ [Async Error]: ' + event.reason + '\n\n';
+      });
+    </script>
+
+    <!-- 4. 游戏主入口 -->
     <script type="module" src="/src/index.ts"></script>
-    <!-- 如果用相对路径想测试，也可以改成： ./src/index.ts -->
   </body>
 </html>
