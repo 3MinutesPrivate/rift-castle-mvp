@@ -1,0 +1,33 @@
+[
+  {
+    "id": "barracks_melee",
+    "name": "近战兵营",
+    "type": "barracks",
+    "cost": 50,
+    "hp": 200,
+    "unitType": "melee_soldier",
+    "spawnInterval": 3,
+    "maxCount": 999,
+    "spriteKey": "building_barracks_melee"
+  },
+  {
+    "id": "barracks_ranged",
+    "name": "远程兵营",
+    "type": "barracks",
+    "cost": 60,
+    "hp": 200,
+    "unitType": "ranged_archer",
+    "spawnInterval": 4,
+    "maxCount": 999,
+    "spriteKey": "building_barracks_ranged"
+  },
+  {
+    "id": "gold_mine",
+    "name": "矿场",
+    "type": "economy",
+    "cost": 80,
+    "hp": 150,
+    "goldPerSecond": 3,
+    "spriteKey": "building_gold_mine"
+  }
+]
