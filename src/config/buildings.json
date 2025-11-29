@@ -6,7 +6,7 @@
     "cost": 50,
     "hp": 200,
     "unitType": "melee_soldier",
-    "spawnInterval": 3,
+    "spawnInterval": 3.5,
     "maxCount": 999,
     "spriteKey": "building_barracks_melee"
   },
@@ -17,7 +17,7 @@
     "cost": 60,
     "hp": 200,
     "unitType": "ranged_archer",
-    "spawnInterval": 4,
+    "spawnInterval": 4.5,
     "maxCount": 999,
     "spriteKey": "building_barracks_ranged"
   },
