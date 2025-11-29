@@ -1,0 +1,38 @@
+[
+  {
+    "id": "melee_soldier",
+    "name": "近战士兵",
+    "hp": 100,
+    "attack": 10,
+    "attackSpeed": 1.0,
+    "moveSpeed": 30,
+    "range": 20,
+    "cost": 20,
+    "spawnCooldown": 3,
+    "spriteKey": "unit_melee"
+  },
+  {
+    "id": "ranged_archer",
+    "name": "弓箭手",
+    "hp": 60,
+    "attack": 8,
+    "attackSpeed": 1.5,
+    "moveSpeed": 30,
+    "range": 80,
+    "cost": 25,
+    "spawnCooldown": 4,
+    "spriteKey": "unit_archer"
+  },
+  {
+    "id": "suicide_bomber",
+    "name": "自爆兵",
+    "hp": 50,
+    "attack": 40,
+    "attackSpeed": 0.5,
+    "moveSpeed": 35,
+    "range": 10,
+    "cost": 30,
+    "spawnCooldown": 5,
+    "spriteKey": "unit_bomber"
+  }
+]
