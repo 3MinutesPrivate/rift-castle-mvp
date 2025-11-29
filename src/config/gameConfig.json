@@ -1,7 +1,7 @@
 {
-  "castleHp": 1000,
+  "castleHp": 2000,
   "startingGold": 100,
-  "baseGoldPerSecond": 5,
+  "baseGoldPerSecond": 3,
   "killGoldReward": 3,
   "laneY": 270,
   "playerCastleX": 120,
