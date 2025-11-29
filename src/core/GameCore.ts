@@ -38,16 +38,14 @@ export class GameCore {
 
   private nextBuildingIndex: Record<Side, number>;
 
-  constructor() {
+  constructor(difficulty: 'normal' | 'hard' = 'normal') {
     this.gameConfig = GAME_CONFIG;
     this.state = new BattleState(
       this.gameConfig.startingGold,
       this.gameConfig.castleHp
     );
 
-    this.unitsConfigMap = new Map(
-      UNITS_CONFIG.map((cfg) => [cfg.id, cfg])
-    );
+    this.unitsConfigMap = new Map(UNITS_CONFIG.map((cfg) => [cfg.id, cfg]));
     this.buildingsConfigMap = new Map(
       BUILDINGS_CONFIG.map((cfg) => [cfg.id, cfg])
     );
@@ -66,7 +64,7 @@ export class GameCore {
       ai: 0
     };
 
-    this.aiController = new AIController(this, 'ai');
+    this.aiController = new AIController(this, 'ai', difficulty);
   }
 
   update(deltaTime: number): void {
@@ -110,7 +108,9 @@ export class GameCore {
     const baseCastleX = side === 'player' ? playerCastleX : aiCastleX;
     const baseX = baseCastleX + direction * 60;
     const x = baseX + direction * (index * 30);
-    const y = laneY - 80 + (index % 3) * 40;
+
+    const baseYOffset = side === 'player' ? -60 : 60;
+    const y = laneY + baseYOffset;
 
     const building = new Building(
       this.nextBuildingId++,
@@ -160,8 +160,6 @@ export class GameCore {
   getBuildingConfig(id: string): BuildingConfig | undefined {
     return this.buildingsConfigMap.get(id);
   }
-
-  // --- Internal update helpers ---
 
   private updateSkills(deltaTime: number): void {
     (['player', 'ai'] as Side[]).forEach((side) => {
