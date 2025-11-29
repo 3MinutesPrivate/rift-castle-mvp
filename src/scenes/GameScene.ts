@@ -7,6 +7,8 @@ export default class GameScene extends Phaser.Scene {
   gameCore!: GameCore;
   gameConfig!: GameConfig;
 
+  private difficulty: 'normal' | 'hard' = 'normal';
+
   private unitSprites: Map<number, Phaser.GameObjects.Sprite> = new Map();
   private buildingSprites: Map<number, Phaser.GameObjects.Sprite> = new Map();
 
@@ -19,9 +21,13 @@ export default class GameScene extends Phaser.Scene {
     super('GameScene');
   }
 
+  init(data: { difficulty?: 'normal' | 'hard' }): void {
+    this.difficulty = data.difficulty ?? 'normal';
+  }
+
   create(): void {
     this.gameConfig = gameConfigData as GameConfig;
-    this.gameCore = new GameCore();
+    this.gameCore = new GameCore(this.difficulty);
 
     const { laneY, playerCastleX, aiCastleX } = this.gameConfig;
     const width = this.scale.width;
@@ -61,7 +67,9 @@ export default class GameScene extends Phaser.Scene {
       existingIds.add(unit.id);
 
       let sprite = this.unitSprites.get(unit.id);
-      const cfg = this.gameCore.getUnitConfig(unit.configId) as UnitConfig | undefined;
+      const cfg = this.gameCore.getUnitConfig(unit.configId) as
+        | UnitConfig
+        | undefined;
       const key = cfg?.spriteKey ?? 'unit_melee';
 
       if (!sprite) {
@@ -145,7 +153,14 @@ export default class GameScene extends Phaser.Scene {
       text = '失败！';
     }
 
-    const bg = this.add.rectangle(width / 2, height / 2, width, 120, 0x000000, 0.7);
+    const bg = this.add.rectangle(
+      width / 2,
+      height / 2,
+      width,
+      120,
+      0x000000,
+      0.7
+    );
     const label = this.add.text(width / 2, height / 2, text, {
       fontSize: '32px',
       color: '#ffffff'
